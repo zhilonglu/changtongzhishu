@@ -19,22 +19,23 @@ import java.util.Map;
 public class splitByday{
 	Map<String,FileWriter> map;
 	PrintWriter pw;
-	public splitByday(){//主要负责生成目录文件
+	public splitByday(String time){//主要负责生成目录文件
+		String year = time.substring(0,4);
 		try{
 			map= new HashMap<String,FileWriter>();
-			for(int i=3;i<4;i++){
-				File f=new File("R:\\高速出入口数据\\2017年按天数据\\20170"+i+"\\");
+			for(int i=12;i<13;i++){
+				File f=new File("J:\\高速出入口数据\\"+year+"年按天数据\\"+year+i+"\\");
 				if(!f.exists())
 					f.mkdirs();
 				for(int j=1;j<=9;j++){
-					String filepath="R:\\高速出入口数据\\2017年按天数据\\20170"+i+"\\20170"+i+"0"+j+".csv";
+					String filepath="J:\\高速出入口数据\\"+year+"年按天数据\\"+year+i+"\\"+year+i+"0"+j+".csv";
 					File file=new File(filepath);
 					if(!file.exists())
 						file.createNewFile();
 					map.put(filepath, new FileWriter(filepath));
 				}
 				for(int j=10;j<=31;j++){
-					String filepath="R:\\高速出入口数据\\2017年按天数据\\20170"+i+"\\20170"+i+j+".csv";
+					String filepath="J:\\高速出入口数据\\"+year+"年按天数据\\"+year+i+"\\"+year+i+j+".csv";
 					File file=new File(filepath);
 					if(!file.exists())
 						file.createNewFile();
@@ -54,14 +55,14 @@ public class splitByday{
 		time = "0"+mTime;
 		return time;
 	}
-	//将输入时间转换为类似于20170308101030的时间格式 2017/11/01 00:00:00
+	//将输入时间转换为类似于20170408101030的时间格式 2017/11/01 00:00:00
 	public String FormatTime(String inputTime){
 		String outTime="";
 		outTime = inputTime.substring(0,4)+inputTime.substring(5,7)+inputTime.substring(8,10);
 		outTime += inputTime.substring(11,13)+inputTime.substring(14,16)+inputTime.substring(17,19);
 		return outTime;
 	}
-	//将格式不标准的格式转化为201703101230的时间格式
+	//将格式不标准的格式转化为201704101230的时间格式
 	public String FormatYMDHMMTime(String inputTime){
 		String output="";
 		String y="",m="",d="",Hour="",Minute="",Second="";
@@ -106,12 +107,34 @@ public class splitByday{
 		}
 		return true;
 	}
-	public void splitByHour(){
-		String outputpath="R:\\高速出入口数据\\2017年按天数据\\201703\\";
+	//追加文件
+	public void appendFile(String fileName, String content) {   
+        FileWriter writer = null;  
+        try {     
+            // 打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件     
+            writer = new FileWriter(fileName, true);     
+            writer.write(content+"\n");       
+        } catch (IOException e) {     
+            e.printStackTrace();     
+        } finally {     
+            try {     
+                if(writer != null){  
+                    writer.close();     
+                }  
+            } catch (IOException e) {     
+                e.printStackTrace();     
+            }     
+        }   
+    }
+	/**
+	 * 
+	 */
+	public void processing(String time,String cTime){
+		String outputpath="J:\\高速出入口数据\\"+time.substring(0,4)+"年按天数据\\";
 		String path="";
 		BufferedReader br=null;
 		try {
-			br = new BufferedReader(new FileReader(new File("G:\\2017年3月高速出入口\\3月出口.txt")));
+			br = new BufferedReader(new FileReader(new File("C:\\Users\\xibol\\Desktop\\"+cTime+"高速出口刷卡数据.txt")));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -135,11 +158,17 @@ public class splitByday{
 				if(st[2].contains("-") || st[2].contains("/")){
 					st[2] = FormatYMDHMMTime(st[2]);
 				}
-				path = outputpath+st[10].substring(0,8)+".csv";
+				path = outputpath+st[10].substring(0,6)+"\\"+st[10].substring(0,8)+".csv";
 				if(map.get(path)!=null){
 					pw = new PrintWriter(map.get(path));
 					pw.println(record);
 					pw.flush();
+				}
+				else{
+					String tempDir = outputpath+st[10].substring(0,6)+"\\";
+					File dirname = new File(tempDir); 
+					if (dirname.isDirectory()) 
+						appendFile(path,record);
 				}
 			}
 		} catch (IOException e) {
@@ -149,8 +178,8 @@ public class splitByday{
 	}
 	public static void main(String[] args){
 		try{
-			splitByday obj = new splitByday();
-			obj.splitByHour();
+			splitByday obj = new splitByday("201712");
+			obj.processing("201712","2017年12月");
 		}
 		catch(Exception e){
 			e.printStackTrace();

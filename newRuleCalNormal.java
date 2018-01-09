@@ -122,7 +122,7 @@ public class newRuleCalNormal {
 	/**
 	 * 读取数据
 	 */
-	public void readData(String rootFilePath,String yandm){
+	public void readData(String rootFilePath,String yandm,String cTime){
 		rootFile=new File(rootFilePath);
 		files1=rootFile.listFiles();
 		String record;
@@ -143,10 +143,10 @@ public class newRuleCalNormal {
 						st=record.split(";");//txt文件时的分隔符是分号，而不是逗号
 						String enstation=st[9],exstation=st[0];
 						if(enstation.equals("0")||exstation.equals("0"))continue;
-						if(!(st[10].substring(0,4).equals("2017")) || !(st[2].substring(0,4).equals("2017")))continue;
+						if(!(st[10].substring(0,4).equals(yandm.substring(0,4))) || !(st[2].substring(0,4).equals(yandm.substring(0,4))))continue;
 						if(st[10].length()<10||st[2].length()<10)continue;
-						long entime=this.changeDateToSeconds(st[10]),
-								extime=this.changeDateToSeconds(st[2]);
+						long entime=this.changeDateToSeconds(st[10]),//入口时间
+								extime=this.changeDateToSeconds(st[2]);//出口时间
 						if(extime<entime||(extime-entime>3600*24))continue;
 						if(!distanceMap.containsKey(enstation+"-"+exstation)){
 							continue;
@@ -164,7 +164,7 @@ public class newRuleCalNormal {
 					}
 					getDelayTime();
 					getCoe();
-					Output(outputPath,date,yandm);
+					Output(outputPath,date,yandm,cTime);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -176,7 +176,7 @@ public class newRuleCalNormal {
 	 */
 	public void readODCsv_new(){
 		try {
-			BufferedReader newbr = new BufferedReader(new FileReader(new File("R:\\高速出入口数据\\重庆静态基础数据\\收费站数据\\收费站最短距离20160623104640.csv")));
+			BufferedReader newbr = new BufferedReader(new FileReader(new File("J:\\高速出入口数据\\重庆静态基础数据\\收费站数据\\收费站最短距离20160623104640.csv")));
 			String newRecord;
 			String[] newst;
 			try {
@@ -203,10 +203,10 @@ public class newRuleCalNormal {
 	/**
 	 * 输出函数，调用output1(),output2(),output3()
 	 */
-	public void Output(String path,String date,String yandm){
+	public void Output(String path,String date,String yandm,String cTime){
 		try{
 			String newFilename = "";
-			newFilename = "Q:\\重庆畅通指数的计算\\201703\\2017年3月份的系数结果（去掉异常）\\"+yandm+"\\"+path+"\\"+date;
+			newFilename = "H:\\重庆畅通指数的计算\\"+yandm+"\\"+cTime+"份的系数结果（去掉异常）\\"+yandm+"\\"+path+"\\"+date;
 			File rootFile_write=new File(newFilename);
 			if(!rootFile_write.exists())rootFile_write.mkdirs();
 			outPut1(realTime_car,realTime_bus,realTime_oneTruck,realTime_twoTruck,realTime_threeTruck,
@@ -698,7 +698,7 @@ public class newRuleCalNormal {
 	}
 
 	public static void main(String[] args){
-		newRuleCalNormal rc=new newRuleCalNormal("R:\\高速出入口数据\\重庆地图\\标准行程时间（90per_h）.csv");
-		rc.readData("R:\\高速出入口数据\\2017年小时数据\\201703","201703");
+		newRuleCalNormal rc=new newRuleCalNormal("J:\\高速出入口数据\\重庆地图\\标准行程时间（90per_h）.csv");
+		rc.readData("J:\\高速出入口数据\\2017年小时数据\\201712","201712","2017年12月");
 	}
 }

@@ -25,21 +25,47 @@ public class splitByhourTxt{
 	PrintWriter pw;
 	String[] allCarNumber = new String[1000];
 	DateFormat sdf=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	public splitByhourTxt(){//主要负责生成目录文件
-//		ReadAllCar();
+	//根据输入的日期，输出该月份的天数
+	public int returnMonthDay(String time){
+		int day = 30;
+		int d_year = Integer.valueOf(time.substring(0,4));
+		int d_mon = Integer.valueOf(time.substring(4,6));
+		switch(d_mon){
+		case 1:
+		case 3:
+		case 5:
+		case 7:
+		case 8:
+		case 10:
+		case 12:day = 31;break;
+		case 2:
+			if((d_year % 4==0 && d_year % 100 !=0) || (d_year % 400==0))
+				day = 29;
+			else
+				day = 28;
+			break;
+		case 4:
+		case 6:
+		case 9:
+		case 11:day=30;break;
+		}
+		return day;
+	}
+	public splitByhourTxt(String time){//主要负责生成目录文件
+		int day = returnMonthDay(time);
 		File f;
 		String rootpath="";
 		String ymd="";
 		try{
 			map= new HashMap<String,FileWriter>();
-			for(int i=1;i<=31;i++){
+			for(int i=1;i<=day;i++){
 				if(i<10){
-					rootpath = "R:\\高速出入口数据\\2017年小时数据\\201703\\"+"2017030"+i;
-					ymd = "2017030"+i;
+					rootpath = "J:\\高速出入口数据\\"+time.substring(0,4)+"年小时数据\\"+time+"\\"+time+"0"+i;
+					ymd = "2017120"+i;
 				}
 				else{
-					rootpath = "R:\\高速出入口数据\\2017年小时数据\\201703\\"+"201703"+i;
-					ymd = "201703"+i;
+					rootpath = "J:\\高速出入口数据\\"+time.substring(0,4)+"年小时数据\\"+time+"\\"+time+i;
+					ymd = "201712"+i;
 				}
 				f=new File(rootpath);
 				if(!f.exists())
@@ -101,8 +127,8 @@ public class splitByhourTxt{
 		}
 		return outputTime;
 	}
-	public void splitByHour(String rootpath){
-		String outputpath="R:\\高速出入口数据\\2017年小时数据\\201703\\";
+	public void splitByHour(String rootpath,String YMtime){
+		String outputpath="J:\\高速出入口数据\\"+YMtime.substring(0,4)+"年小时数据\\"+YMtime+"\\";
 		String path="";
 		BufferedReader br=null;
 		try {
@@ -119,7 +145,7 @@ public class splitByhourTxt{
 				content = record.split(";");
 				if(content[10].length()<16)//时间格式不正确，直接剔除数据
 					continue;
-				String time = FormatTime2(content[10]);
+				String time = FormatTime2(content[10]);//入口时间
 				path = outputpath+time.substring(0, 8)+"\\"+time.substring(0, 10)+".csv";
 				if(map.get(path)!=null){
 					pw = new PrintWriter(map.get(path));
@@ -134,8 +160,8 @@ public class splitByhourTxt{
 	}
 	public static void main(String[] args){
 		try{
-			splitByhourTxt obj = new splitByhourTxt();
-			obj.splitByHour("G:\\2017年3月高速出入口\\3月出口.txt");
+			splitByhourTxt obj = new splitByhourTxt("201712");
+			obj.splitByHour("C:\\Users\\xibol\\Desktop\\2017年12月高速出口刷卡数据.txt","201712");
 		}
 		catch(Exception e){
 			e.printStackTrace();

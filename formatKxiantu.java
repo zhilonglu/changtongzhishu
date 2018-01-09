@@ -30,14 +30,13 @@ public class formatKxiantu {
 			return true;
 		}
 	//出行量格式化输出
-	public void readChuxingliang(String path){
-//		String output="";
+	public void readChuxingliang(String path,String time,String cTime){
 		String output2="";
 		String output3="";
 		BufferedReader br = null;
 		file=new File(path);
 		files1= file.listFiles();
-		File f = new File("Q:\\重庆畅通指数的计算\\201703\\折算前\\按小时计算\\");
+		File f = new File("H:\\重庆畅通指数的计算\\"+time+"\\折算前\\按小时计算\\");
 		if(!f.exists()){
 			f.mkdirs();
 		}
@@ -80,7 +79,7 @@ public class formatKxiantu {
 			}
 		}
 		try {
-			BufferedWriter bw2 = new BufferedWriter(new FileWriter(new File("Q:\\重庆畅通指数的计算\\201703\\折算前\\按小时计算\\2017年3月小型车出行量统计输出结果_按小时计算.csv")));
+			BufferedWriter bw2 = new BufferedWriter(new FileWriter(new File("H:\\重庆畅通指数的计算\\"+time+"\\折算前\\按小时计算\\"+cTime+"小型车出行量统计输出结果_按小时计算.csv")));
 			bw2.write(output2);
 			bw2.flush();
 			bw2.close();
@@ -89,7 +88,7 @@ public class formatKxiantu {
 			e.printStackTrace();
 		}
 		try {
-			BufferedWriter bw3 = new BufferedWriter(new FileWriter(new File("Q:\\重庆畅通指数的计算\\201703\\折算前\\按小时计算\\2017年3月小型车出行量统计输出结果_按小时计算(Echarts).txt")));
+			BufferedWriter bw3 = new BufferedWriter(new FileWriter(new File("H:\\重庆畅通指数的计算\\"+time+"\\折算前\\按小时计算\\"+cTime+"小型车出行量统计输出结果_按小时计算(Echarts).txt")));
 			bw3.write(output3);
 			bw3.flush();
 			bw3.close();
@@ -98,11 +97,10 @@ public class formatKxiantu {
 			e.printStackTrace();
 		}
 	}
-	public void readData(String path){
-//		String output="";
+	public void readData(String path,String time,String cTime,String comstr){
 		String output2="";
 		String output3="";
-		String outputPath = "Q:\\重庆畅通指数的计算\\201703\\折算前\\按小时计算\\";//输出文件的路径位置
+		String outputPath = "H:\\重庆畅通指数的计算\\"+time+"\\折算前\\按小时计算\\";//输出文件的路径位置
 		File f = new File(outputPath);
 		if(!f.exists()){
 			f.mkdirs();
@@ -115,7 +113,7 @@ public class formatKxiantu {
 			files2 = files1[i].listFiles();
 			for(int j=0;j<files2.length;j++)
 			{
-				if(files2[j].getName().substring(0,4).equals("2017"))//找到系数文件
+				if(files2[j].getName().substring(0,4).equals(time.substring(0, 4)))//找到系数文件
 				{
 					try {
 						br = new BufferedReader(new FileReader(files2[j]));
@@ -144,7 +142,7 @@ public class formatKxiantu {
 			}
 		}
 		try {
-			BufferedWriter bw2 = new BufferedWriter(new FileWriter(new File(outputPath+"2017年3月小型车平均延误时间统计输出结果.csv")));
+			BufferedWriter bw2 = new BufferedWriter(new FileWriter(new File(outputPath+cTime+"小型车"+comstr+"统计输出结果.csv")));
 			bw2.write(output2);
 			bw2.flush();
 			bw2.close();
@@ -153,7 +151,7 @@ public class formatKxiantu {
 			e.printStackTrace();
 		}
 		try {
-			BufferedWriter bw3 = new BufferedWriter(new FileWriter(new File(outputPath+"2017年3月小型车平均延误时间统计输出结果(Echarts).txt")));
+			BufferedWriter bw3 = new BufferedWriter(new FileWriter(new File(outputPath+cTime+"小型车"+comstr+"统计输出结果(Echarts).txt")));
 			bw3.write(output3);
 			bw3.flush();
 			bw3.close();
@@ -164,7 +162,7 @@ public class formatKxiantu {
 	}
 	public static void main(String[] args){
 		formatKxiantu obj = new formatKxiantu();
-//		obj.readChuxingliang("Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车出行量（去掉异常）\\");
-		obj.readData("Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车平均延误时间\\");
+		obj.readChuxingliang("H:\\重庆畅通指数的计算\\201712\\2017年12月份小型车出行量（去掉异常）\\","201712","2017年12月");
+		obj.readData("H:\\重庆畅通指数的计算\\201712\\2017年12月份小型车平均延误时间\\","201712","2017年12月","出行系数");
 	}
 }

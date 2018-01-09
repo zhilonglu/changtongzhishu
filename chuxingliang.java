@@ -63,7 +63,7 @@ public class chuxingliang {
 	 */
 	public void readODCsv_new(){
 		try {
-			BufferedReader newbr = new BufferedReader(new FileReader(new File("R:\\高速出入口数据\\重庆静态基础数据\\收费站数据\\收费站最短距离20160623104640.csv")));
+			BufferedReader newbr = new BufferedReader(new FileReader(new File("J:\\高速出入口数据\\重庆静态基础数据\\收费站数据\\收费站最短距离20160623104640.csv")));
 			String newRecord;
 			String[] newst;
 			try {
@@ -110,7 +110,7 @@ public class chuxingliang {
 			}
 		}
 	}
-	public void readData(String rootFilePath,String date){
+	public void readData(String rootFilePath,String date,String cTime){
 		readODCsv_new();
 		File rootFile=new File(rootFilePath);
 		File[] files1=rootFile.listFiles();
@@ -121,7 +121,7 @@ public class chuxingliang {
 		BufferedWriter bw = null;
 		for(int i=0;i<files1.length;i++){
 			files2 = files1[i].listFiles();
-			String Filepath = "Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车出行量（去掉异常）\\"+date+"小时出行量\\"+files1[i].getName()+"\\";
+			String Filepath = "H:\\重庆畅通指数的计算\\"+date+"\\"+cTime+"份小型车出行量（去掉异常）\\"+date+"小时出行量\\"+files1[i].getName()+"\\";
 			File f = new File(Filepath);
 			if(!f.exists()){
 				f.mkdirs();
@@ -143,7 +143,7 @@ public class chuxingliang {
 						st=record.split(";");//txt文件时的分隔符是分号，而不是逗号
 						String enstation=st[9],exstation=st[0];
 						if(enstation.equals("0")||exstation.equals("0"))continue;
-						if(!(st[10].substring(0,4).equals("2017")) || !(st[2].substring(0,4).equals("2017")))continue;
+						if(!(st[10].substring(0,4).equals(date.substring(0,4))) || !(st[2].substring(0,4).equals(date.substring(0,4))))continue;
 						if(st[10].length()<10||st[2].length()<10)continue;
 						long entime=this.changeDateToSeconds(st[10]),
 								extime=this.changeDateToSeconds(st[2]);
@@ -197,6 +197,6 @@ public class chuxingliang {
 	} 
 	public static void main(String[] args){
 		chuxingliang obj = new chuxingliang();
-		obj.readData("R:\\高速出入口数据\\2017年小时数据\\201703","201703");
+		obj.readData("J:\\高速出入口数据\\2017年小时数据\\201712","201712","2017年12月");
 	}
 }

@@ -25,11 +25,11 @@ public class xishuFabu {
 	BufferedWriter bw_Time2 = null;
 	//记录某个小时出行量的占比情况
 	HashMap<String,Double> chuxingliangRate=new HashMap<String,Double>();
-	public int ReadChuxingliang(String day,String hour){
+	public int ReadChuxingliang(String day,String hour,String time,String cTime){
 		chuxingliangRate.clear();
 		File[] file1;
 		File[] file2;
-		File rootfile = new File("Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车出行量（去掉异常）\\201703小时出行量\\");
+		File rootfile = new File("H:\\重庆畅通指数的计算\\"+time+"\\"+cTime+"份小型车出行量（去掉异常）\\201712小时出行量\\");
 		file1= rootfile.listFiles();
 		int sumVehicle=0;
 		for(int i=0;i<file1.length;i++){
@@ -80,27 +80,27 @@ public class xishuFabu {
 		}
 		return true;
 	}
-	public void ReadData(String rootpathXishu){
+	public void ReadData(String rootpathXishu,String time,String cTime){
 		File rootfile = new File(rootpathXishu);
 		files1= rootfile.listFiles();
-		String pathXishu="Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车出行系数\\201703\\";
+		String pathXishu="H:\\重庆畅通指数的计算\\"+time+"\\"+cTime+"份小型车出行系数\\"+time+"\\";
 		File f= new File(pathXishu);
 		if(!f.exists()){
 			f.mkdirs();
 		}
-		String pathDelayTime = "Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车平均延误时间\\201703\\";
+		String pathDelayTime = "H:\\重庆畅通指数的计算\\"+time+"\\"+cTime+"份小型车平均延误时间\\"+time+"\\";
 		File f2= new File(pathDelayTime);
 		if(!f2.exists()){
 			f2.mkdirs();
 		}
-		String secondpathXishu = "Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车出行系数\\201703\\整个月的出行系数.csv";
+		String secondpathXishu = "H:\\重庆畅通指数的计算\\"+time+"\\"+cTime+"份小型车出行系数\\"+time+"\\整个月的出行系数.csv";
 		try {
 			bw_xishu2 = new BufferedWriter(new FileWriter(new File(secondpathXishu)));
 		} catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		String secondpathTime = "Q:\\重庆畅通指数的计算\\201703\\2017年3月份小型车平均延误时间\\201703\\整个月的平均延误时间.csv";
+		String secondpathTime = "H:\\重庆畅通指数的计算\\"+time+"\\"+cTime+"份小型车平均延误时间\\"+time+"\\整个月的平均延误时间.csv";
 		try {
 			bw_Time2 = new BufferedWriter(new FileWriter(new File(secondpathTime)));
 		} catch (IOException e2) {
@@ -129,7 +129,7 @@ public class xishuFabu {
 				allput_xishu += hour +",";
 				output_time += hour+",";
 				allput_time += hour +",";
-				int sumCar = ReadChuxingliang(day,hour);
+				int sumCar = ReadChuxingliang(day,hour,time,cTime);
 				for(int k=0;k<files3.length;k++){
 					if(files3[k].getName().equals("出行系数.csv")){
 						try {
@@ -223,6 +223,6 @@ public class xishuFabu {
 	}
 	public static void main(String[] args){
 		xishuFabu obj = new xishuFabu();
-		obj.ReadData("Q:\\重庆畅通指数的计算\\201703\\2017年3月份的系数结果（去掉异常）\\201703");
+		obj.ReadData("H:\\重庆畅通指数的计算\\201712\\2017年12月份的系数结果（去掉异常）\\201712","201712","2017年12月");
 	}
 }
